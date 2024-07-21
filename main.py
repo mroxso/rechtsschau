@@ -1,4 +1,5 @@
 import os
+from time import sleep
 import feedparser
 import psycopg2
 from psycopg2 import sql
@@ -19,6 +20,7 @@ def insert_into_db(data, db_config):
             title TEXT,
             link TEXT,
             description TEXT,
+            typ TEXT,
             sachgebiet TEXT,
             published TEXT
         )
@@ -29,8 +31,8 @@ def insert_into_db(data, db_config):
         for entry in data.entries:
             # insert only when <meta:typ>Gesetz</meta:typ>
             # if 'meta' in entry and 'typ' in entry.meta and entry.meta_typ != 'Gesetz':
-            if(entry.meta_typ != 'Gesetz'):
-                continue
+            # if(entry.meta_typ != 'Gesetz'):
+            #     continue
 
             # insert only when title does not exist in database yet
             check_query = sql.SQL('''
@@ -43,13 +45,14 @@ def insert_into_db(data, db_config):
 
             # INSERT IT TO DB
             insert_query = sql.SQL('''
-            INSERT INTO rss_feed (title, link, description, sachgebiet, published)
-            VALUES (%s, %s, %s, %s, %s)
+            INSERT INTO rss_feed (title, link, description, typ, sachgebiet, published)
+            VALUES (%s, %s, %s, %s, %s, %s)
             ''')
             cur.execute(insert_query, (
                 entry.title,
                 entry.link,
                 entry.description,
+                entry.meta_typ,
                 entry.meta_sachgebiet if 'meta_sachgebiet' in entry else None,
                 entry.pubDate if 'pubDate' in entry else None
             ))
@@ -74,6 +77,14 @@ db_config = {
     'password': os.getenv('DB_PASS', 'your_password')
 }
 
-# RSS Feed calling and storing in DB
-feed_data = fetch_rss_feed(rss_url)
-insert_into_db(feed_data, db_config)
+while(True):
+    print("Fetching RSS Feed...")
+
+    # RSS Feed calling and storing in DB
+    feed_data = fetch_rss_feed(rss_url)
+    insert_into_db(feed_data, db_config)
+
+    print("RSS Feed fetched and stored in DB")
+
+    # Sleep for an hour
+    sleep(60 * 60) # sleep for 1 hour
