@@ -19,8 +19,15 @@ cur = conn.cursor()
 app = Flask(__name__)
 
 @app.route('/')
-def hello_world():
+def home():
     get_query = sql.SQL('''SELECT * FROM rss_feed;''')
+    cur.execute(get_query)
+    results = cur.fetchall()
+    return render_template("index.html", data=results)
+
+@app.route('/gesetze')
+def gesetze():
+    get_query = sql.SQL('''SELECT * FROM rss_feed WHERE typ LIKE 'Gesetz';''')
     cur.execute(get_query)
     results = cur.fetchall()
     return render_template("index.html", data=results)
