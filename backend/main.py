@@ -10,6 +10,8 @@ import PyPDF2
 from urllib.parse import urlparse, parse_qs
 from lxml import html
 
+ollama_host = os.getenv('OLLAMA_HOST', 'http://localhost:11434')
+
 def extract_pdf_from_url(url, id):
     response = requests.get(url)
     webpage_content = response.content
@@ -143,7 +145,7 @@ while(True):
 
         print("Creating AI summary for id " + str(result[0]) + " ...")
         # AI Summary
-        client = Client(host='http://host.docker.internal:11434')
+        client = Client(host=ollama_host)
         response = client.chat(model='llama3', messages=[
         {
             'role': 'systems',
