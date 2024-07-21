@@ -1,2 +1,7 @@
 feedparser
 psycopg2-binary
+ollama
+requests
+bs4
+PyPDF2
+lxml

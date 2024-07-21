@@ -19,6 +19,8 @@ services:
       - DB_NAME=your_database
       - DB_USER=your_username
       - DB_PASS=your_password
+    volumes:
+      - ./files:/app/files/
     ports:
       - 7070:5000
     depends_on:
