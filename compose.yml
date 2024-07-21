@@ -22,5 +22,12 @@ services:
     depends_on:
       - db
 
+  frontend:
+    build: ./frontend
+    ports:
+      - 5001:5001
+    depends_on:
+      - backend
+
 # volumes:
 #   postgres_data:
