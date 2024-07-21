@@ -1,0 +1,15 @@
+<html>
+    <head>
+        <title>Rechtsschau - Home</title>
+    </head>
+    <body>
+        <ul>
+            {% for entry in data %}
+                <li>
+                    <h2>{{ entry[1] }}</h2>
+                    <a href="{{ entry[2] }}" target="_blank">{{ entry[2] }}</a>
+                </li>
+            {% endfor %}
+        </ul>
+    </body>
+</html>

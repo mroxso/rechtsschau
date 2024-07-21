@@ -1,5 +1,5 @@
 # basic flask app
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, render_template
 import psycopg2
 from psycopg2 import sql
 import os
@@ -20,7 +20,10 @@ app = Flask(__name__)
 
 @app.route('/')
 def hello_world():
-    return 'Hello, World!'
+    get_query = sql.SQL('''SELECT * FROM rss_feed;''')
+    cur.execute(get_query)
+    results = cur.fetchall()
+    return render_template("index.html", data=results)
 
 @app.route('/api', methods=['GET'])
 def getapi():
