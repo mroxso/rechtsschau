@@ -12,8 +12,8 @@ services:
     volumes:
       - ./postgres_data:/var/lib/postgresql/data
 
-  app:
-    build: .
+  backend:
+    build: ./backend
     environment:
       - DB_HOST=db
       - DB_NAME=your_database
